@@ -4,8 +4,14 @@ using UnityEngine;
 
 public class Snake : MonoBehaviour
 {
-    private PlayerMovement PlayerMovement;
     private Snake Next;
+
+    public static bool GameOver;
+
+    void Start()
+    {
+        GameOver = false;
+    }
 
     public void SetNext(Snake IN)
     {
@@ -22,12 +28,25 @@ public class Snake : MonoBehaviour
         Destroy(this.gameObject);
     }
 
-    void OnTriggerEnter(Collider other)
+    public void OnTriggerEnter(Collider other)
     {
         if (other.transform.tag == "Food")
         {
-            Debug.Log("Food");
-            Destroy(other);
+            PlayerMovement.MaxSize ++;
+            PlayerMovement.Timer -= 0.01f;
+            Destroy(other.gameObject);
+            PlayerMovement.FoodOnMap = false;
+        }
+
+        if (other.transform.tag == "Wall")
+        {
+            GameOver = true;
+        }
+
+        if (other.transform.tag == "Snake")
+        {
+            GameOver = true;
         }
     }
+
 }

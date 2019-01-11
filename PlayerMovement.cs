@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public int MaxSize;
-    public int CurrentSize;
+    public static int MaxSize;
+    public static int CurrentSize;
     public GameObject SnakePrefab;
     public Snake Head;
     public Snake Tail;
@@ -14,19 +14,32 @@ public class PlayerMovement : MonoBehaviour
     public int YSpawn;
     public GameObject FoodPrefab;
     public GameObject CurrentFood;
+    public static bool FoodOnMap = false;
 
     public int NESW;
     public Vector2 NextPos;
 
+    public static float Timer;
+
     void Start()
     {
-        InvokeRepeating("TimerInvoker", 0 , 0.25f);
-        FoodFunction();
+        //InvokeRepeating("TimerInvoker", 0 , Timer);
+        Timer = 0.2f;
+        MaxSize = 1;
+        CurrentSize = 1;
     }
 
     void Update()
     {
-        ChangeDirection();
+        if (Snake.GameOver == false)
+        {
+            ChangeDirection();
+            FoodFunction();
+        }
+        else
+        {
+            GameOver();
+        }
     }
 
     void TimerInvoker()
@@ -100,11 +113,28 @@ public class PlayerMovement : MonoBehaviour
 
     public void FoodFunction ()
     {
-        int XPos = Random.Range(-XSpawn, XSpawn);
-        int YPos = Random.Range(-YSpawn, YSpawn);
+        if (FoodOnMap == false)
+        {
+            if (Timer >= 0.05f)
+            {
+                CancelInvoke("TimerInvoker");
+                InvokeRepeating("TimerInvoker", 0, Timer);
+            }
+            int XPos = Random.Range(-XSpawn, XSpawn);
+            int YPos = Random.Range(-YSpawn, (YSpawn-4));
 
-        CurrentFood = (GameObject)Instantiate(FoodPrefab , new Vector2(XPos,YPos),transform.rotation);
-        
+            CurrentFood = (GameObject)Instantiate(FoodPrefab, new Vector2(XPos, YPos), transform.rotation);
+            FoodOnMap = true;
+        }
     }
 
+    public void GameOver()
+    {
+        if(Snake.GameOver == true)
+        {
+            CancelInvoke("TimerInvoker");
+            Destroy(Head);
+            //Debug.Log("Game OVER");
+        }
+    }
 }
