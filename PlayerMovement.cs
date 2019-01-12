@@ -28,9 +28,11 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         //InvokeRepeating("TimerInvoker", 0 , Timer);
+        Snake.GameOver = false;
         Timer = 0.2f;
         MaxSize = 1;
         CurrentSize = 1;
+        FoodOnMap = false;
     }
 
     void Update()
