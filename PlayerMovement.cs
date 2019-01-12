@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -130,11 +131,21 @@ public class PlayerMovement : MonoBehaviour
 
     public void GameOver()
     {
-        if(Snake.GameOver == true)
+        if (Snake.GameOver == true)
+        {
+            StartCoroutine("LostGame");
+        }
+        
+    }
+
+    IEnumerator LostGame()
+    {
+        if (Snake.GameOver == true)
         {
             CancelInvoke("TimerInvoker");
             Destroy(Head);
-            //Debug.Log("Game OVER");
+            yield return new WaitForSeconds(2f);
+            SceneManager.LoadScene(0);
         }
     }
 }
