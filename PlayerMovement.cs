@@ -18,9 +18,12 @@ public class PlayerMovement : MonoBehaviour
     public static bool FoodOnMap = false;
 
     public int NESW;
+    public int Direction;
     public Vector2 NextPos;
 
     public static float Timer;
+
+    private Vector2 StartPosition, EndPosition , DeltaPosition;
 
     void Start()
     {
@@ -32,6 +35,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+
         if (Snake.GameOver == false)
         {
             ChangeDirection();
@@ -84,22 +88,59 @@ public class PlayerMovement : MonoBehaviour
 
     void ChangeDirection()
     {
-        if(NESW != 2 && Input.GetKeyDown(KeyCode.W))
+        if(Input.GetMouseButtonDown(0))
+        {
+            StartPosition = Input.mousePosition;
+        }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            EndPosition = Input.mousePosition;
+            DeltaPosition = EndPosition - StartPosition;
+            if(Mathf.Abs(DeltaPosition.x) > Mathf.Abs(DeltaPosition.y))
+            {
+                if(DeltaPosition.x > 0)
+                {
+                    //D
+                    Direction = 2;
+                }
+                else
+                {
+                    //A
+                    Direction = 4;
+                }
+            }
+            else
+            {
+                if (DeltaPosition.y > 0)
+                {
+                    //W
+                    Direction = 1;
+                }
+                else
+                {
+                    //S
+                    Direction = 3;
+                }
+            }
+        }
+
+        if (NESW != 2 && Direction == 1)
         {
             NESW = 0;
         }
 
-        if (NESW != 3 && Input.GetKeyDown(KeyCode.D))
+        if (NESW != 3 && Direction == 2)
         {
             NESW = 1;
         }
 
-        if (NESW != 0 && Input.GetKeyDown(KeyCode.S))
+        if (NESW != 0 && Direction == 3)
         {
             NESW = 2;
         }
 
-        if (NESW != 1 && Input.GetKeyDown(KeyCode.A))
+        if (NESW != 1 && Direction == 4)
         {
             NESW = 3;
         }
